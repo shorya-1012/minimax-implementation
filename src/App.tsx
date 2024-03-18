@@ -13,16 +13,6 @@ function App() {
     const [isGameOver, setIsGameOver] = useState(false);
     const [gameResultMessage, setGameResultMessage] = useState("");
 
-    useEffect(() => {
-        if (playerTurn === PlayerTurn.Ai) {
-            let updatedGameBoard = [...gameBoard];
-            let bestMove = findBestMove(updatedGameBoard); // Use updatedGameBoard here
-            updatedGameBoard[bestMove.first][bestMove.second] = BoardValues.O;
-            setGameBoard(updatedGameBoard);
-            setPlayerTurn(PlayerTurn.Human);
-        }
-    }, []);
-
     const handle_click = (row: number, col: number) => {
         if (gameBoard[row][col] !== BoardValues.Empty) {
             return;
@@ -76,6 +66,7 @@ function App() {
                 updatedGameBoard[row][col] = BoardValues.Empty;
             }
         }
+        setPlayerTurn(PlayerTurn.Human);
         setGameBoard(updatedGameBoard);
         setIsGameOver(false);
     }
