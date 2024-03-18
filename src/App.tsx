@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { check_win } from "./lib/checkers";
 import { PlayerTurn, GameState, BoardValues } from "./lib/types";
 import { findBestMove } from "./lib/minimax";

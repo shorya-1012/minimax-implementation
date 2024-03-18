@@ -8,7 +8,7 @@ export const findBestMove = (game_board: BoardValues[][]): MovePair => {
         for (let col = 0; col < 3; col++) {
             if (game_board[row][col] === BoardValues.Empty) {
                 game_board[row][col] = BoardValues.O;
-                let score = minimax(game_board, 0, true);
+                let score = minimax(game_board, -Infinity, Infinity, 0, true);
                 if (score < bestScore) {
                     bestScore = score;
                     bestMove = { first: row, second: col };
@@ -20,7 +20,7 @@ export const findBestMove = (game_board: BoardValues[][]): MovePair => {
     return bestMove;
 }
 
-const minimax = (game_board: BoardValues[][], depth: number, isMaximising: boolean): number => {
+const minimax = (game_board: BoardValues[][], alpha: number, beta: number, depth: number, isMaximising: boolean): number => {
     if (check_win(game_board) === GameState.Owins) {
         return -1;
     }
@@ -32,31 +32,39 @@ const minimax = (game_board: BoardValues[][], depth: number, isMaximising: boole
     }
 
     if (isMaximising === true) {
-        let bestValue = -Infinity;
+        let bestScore = -Infinity;
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
                 if (game_board[row][col] === BoardValues.Empty) {
                     game_board[row][col] = BoardValues.X;
-                    let value = minimax(game_board, depth + 1, false);
-                    bestValue = Math.max(bestValue, value);
+                    let score = minimax(game_board, alpha, beta, depth + 1, false);
                     game_board[row][col] = BoardValues.Empty;
+                    bestScore = Math.max(bestScore, score);
+                    alpha = Math.max(alpha, score);
+                    if (beta <= alpha) {
+                        break;
+                    }
                 }
             }
         }
-        return bestValue;
+        return bestScore;
     } else {
-        let bestValue = Infinity;
+        let bestScore = Infinity;
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
                 if (game_board[row][col] === BoardValues.Empty) {
                     game_board[row][col] = BoardValues.O;
-                    let value = minimax(game_board, depth + 1, true);
-                    bestValue = Math.min(bestValue, value);
+                    let score = minimax(game_board, alpha, beta, depth + 1, true);
                     game_board[row][col] = BoardValues.Empty;
+                    bestScore = Math.min(bestScore, score);
+                    beta = Math.min(beta, score);
+                    if (beta <= alpha) {
+                        break;
+                    }
                 }
             }
         }
-        return bestValue;
+        return bestScore;
     }
 }
 
